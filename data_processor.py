@@ -32,7 +32,7 @@ def get_financial_news(query="economy", api_key=NEWSAPI_API_KEY):
     except requests.exceptions.RequestException as e:
         print(f"data_processor.py: Error fetching news: {e}")
         return None
-    except ValueError as e: # Catch JSON decoding errors
+    except ValueError as e: 
         print(f"data_processor.py: Error decoding JSON response: {e}")
         return None
 
