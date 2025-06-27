@@ -6,7 +6,7 @@ import mysql.connector
 from dotenv import load_dotenv
 
 print("data_processor.py: Script loaded, loading environment variables...")
-load_dotenv() # Load environment variables from .env file
+load_dotenv() 
 
 NEWSAPI_API_KEY = os.getenv('NEWSAPI_API_KEY')
 DB_HOST = os.getenv('DB_HOST')
@@ -25,7 +25,7 @@ def get_financial_news(query="economy", api_key=NEWSAPI_API_KEY):
     url = f"https://newsapi.org/v2/everything?q={query}&language=en&sortBy=relevancy&apiKey={api_key}"
     try:
         response = requests.get(url)
-        response.raise_for_status() # Raise an exception for HTTP errors (4xx or 5xx)
+        response.raise_for_status() 
         data = response.json()
         print(f"data_processor.py: Fetched {len(data.get('articles', []))} articles.")
         return data.get('articles')
@@ -62,18 +62,15 @@ def process_news_data(articles):
             'sentiment_score': sentiment_score
         })
     
-    # Optionally convert to DataFrame for more complex processing
     df = pd.DataFrame(processed_data)
     print("data_processor.py: News data processed into DataFrame.")
     
-    # Store processed data in DB (optional, can be done periodically or on demand)
-    # For now, we'll just return it. You can add a function to save to DB here.
-    return df.to_dict(orient='records') # Return as list of dictionaries for Flask template
+    return df.to_dict(orient='records') 
 
 def init_db():
     print("data_processor.py: init_db() called, attempting database connection...")
-    conn = None # Initialize conn to None
-    cursor = None # Initialize cursor to None
+    conn = None 
+    cursor = None 
     try:
         conn = mysql.connector.connect(
             host=DB_HOST,
@@ -84,9 +81,6 @@ def init_db():
         cursor = conn.cursor()
         print("data_processor.py: Connected to database.")
 
-        # Create news table if it doesn't exist
-        # Using TEXT for description to allow longer content
-        # Using VARCHAR(255) for title
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS news (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,8 +95,6 @@ def init_db():
 
     except mysql.connector.Error as err:
         print(f"data_processor.py: Database error during init_db: {err}")
-        # IMPORTANT: If init_db fails, the app will likely crash later.
-        # For a dev setup, printing is fine. For production, you might want more robust error handling.
     except Exception as e:
         print(f"data_processor.py: An unexpected error occurred during init_db: {e}")
     finally:
@@ -115,14 +107,6 @@ def init_db():
 # Example usage (for testing purposes, not part of the Flask app flow)
 if __name__ == '__main__':
     print("data_processor.py: Running example usage directly.")
-    # Example: Test get_financial_news
-    # news_articles = get_financial_news("tech stocks")
-    # if news_articles:
-    #     processed = process_news_data(news_articles)
-    #     print(f"Processed {len(processed)} articles.")
-    # else:
-    #     print("No articles fetched.")
-    
-    # Test init_db
+
     init_db()
     print("data_processor.py: init_db() test complete.")

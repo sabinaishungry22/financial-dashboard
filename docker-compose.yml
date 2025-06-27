@@ -4,37 +4,33 @@ services:
   app:
     build: .
     ports:
-      - "5000:5000" # Map host port 5000 to container port 5000
+      - "5000:5000"
     volumes:
-      - .:/app    # Mount your current project directory into the container
+      - .:/app    
     env_file:
-      - ./.env    # Load environment variables from .env file
+      - ./.env    
     depends_on:
-      - db        # Ensure the 'db' service starts before 'app'
-    # The 'command' is now handled by the 'CMD' instruction in your Dockerfile.
-    # So, you don't need a 'command' here in docker-compose.yml for the 'app' service.
-    # REMOVE THE LINES THAT WERE COMMENTED OUT ABOUT 'command:'
+      - db        
     networks:
       - app-network
 
   db:
-    image: mysql:8.0 # Use MySQL 8.0 image
+    image: mysql:8.0 
     ports:
-      - "3307:3306" # Map host port 3306 to container port 3306
+      - "3307:3306" 
     env_file:
-      - ./.env    # Load environment variables (DB_PASSWORD, DB_NAME)
+      - ./.env    
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} # Sets the root password for MySQL
-      MYSQL_DATABASE: ${DB_NAME}         # Creates a database with this name
-      # Removed MYSQL_USER and MYSQL_PASSWORD as they conflict with MYSQL_ROOT_PASSWORD
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD} 
+      MYSQL_DATABASE: ${DB_NAME}       
     volumes:
-      - db_data:/var/lib/mysql # Persistent storage for database data
+      - db_data:/var/lib/mysql 
     networks:
       - app-network
 
 volumes:
-  db_data: # Define the named volume for database persistence
+  db_data: 
 
 networks:
   app-network:
-    driver: bridge # Define a custom network for containers to communicate
+    driver: bridge 

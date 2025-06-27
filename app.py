@@ -5,8 +5,6 @@ print("app.py: Starting Flask application setup...")
 
 app = Flask(__name__)
 
-# Initialize the database and create tables on application startup
-# This will run once when the app container starts
 init_db()
 print("app.py: Database initialization complete.")
 
@@ -26,7 +24,6 @@ def index():
     else:
         error_message = f"Could not retrieve news for '{query}'. Please check the query or API limits."
     
-    # Render_template expects 'templates/dashboard.html'
     return render_template(
         'dashboard.html',
         news=processed_news,
@@ -34,9 +31,6 @@ def index():
         error=error_message
     )
 
-# --- CRITICAL: Remove the if __name__ == '__main__': block ENTIRELY ---
-# When Docker runs `python app.py`, it directly executes the script.
-# We need app.run() to be called directly.
 print("app.py: Attempting to run Flask app...")
 app.run(host='0.0.0.0', port=5000, debug=True) # Explicitly set host/port/debug
 print("app.py: Flask app.run() initiated (should not be reached if server starts).")
