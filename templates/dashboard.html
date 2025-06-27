@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .news-item { background-color: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+        .sentiment-positive { color: green; font-weight: bold; }
+        .sentiment-negative { color: red; font-weight: bold; }
+        .sentiment-neutral { color: gray; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { padding: 8px; width: 200px; }
+        input[type="submit"] { padding: 8px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Financial News Dashboard</h1>
+
+        <form method="POST" action="/">
+            <label for="query">Search News:</label>
+            <input type="text" id="query" name="query" value="{{ current_query }}">
+            <input type="submit" value="Search">
+        </form>
+
+        {% if error %}
+            <p style="color: red;">Error: {{ error }}</p>
+        {% endif %}
+
+        <h2>Latest Financial News</h2>
+        {% if news %}
+            {% for item in news %}
+                <div class="news-item">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                    <p>Published: {{ item.published_at }}</p>
+                    <p>Sentiment: 
+                        {% if item.sentiment_score > 0 %}
+                            <span class="sentiment-positive">Positive ({{ "%.2f"|format(item.sentiment_score) }})</span>
+                        {% elif item.sentiment_score < 0 %}
+                            <span class="sentiment-negative">Negative ({{ "%.2f"|format(item.sentiment_score) }})</span>
+                        {% else %}
+                            <span class="sentiment-neutral">Neutral ({{ "%.2f"|format(item.sentiment_score) }})</span>
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No news found for the current query.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
