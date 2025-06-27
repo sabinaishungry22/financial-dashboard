@@ -32,5 +32,5 @@ def index():
     )
 
 print("app.py: Attempting to run Flask app...")
-app.run(host='0.0.0.0', port=5000, debug=True) # Explicitly set host/port/debug
+app.run(host='0.0.0.0', port=5000, debug=True)
 print("app.py: Flask app.run() initiated (should not be reached if server starts).")
